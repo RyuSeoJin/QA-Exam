@@ -519,6 +519,7 @@ function setsInData(){
   return c;
 }
 function hasAI(){ return ALL.some(q=>q.set==='AI') }
+function sampleSets(){ return Object.keys(setsInData()).filter(s=>s!=='AI').sort() }
 
 function initHome(){
   document.getElementById('heroTitle').innerHTML=activeCert.title||activeCert.name;
@@ -527,7 +528,7 @@ function initHome(){
     `문제 출처: KSTQB 공개 샘플 문제 · 실러버스 기반 · 학습용`;
 
   state.mode='set';
-  state.selectedSets=new Set();
+  state.selectedSets=new Set(sampleSets());   // 세트별 풀기: 샘플 A·B·C·D 전체 선택 기본
   state.selectedChapters=new Set(activeCert.chapters?Object.keys(activeCert.chapters):[]);
   state.count=0;       // 전체
   state.order='seq';   // 순서대로
@@ -559,8 +560,16 @@ function buildModes(){
       state.mode=m.id;
       // 모드 전환 시 기본값 재설정
       state.selectedChapters=new Set(activeCert.chapters?Object.keys(activeCert.chapters):[]);
-      if(m.id==='set'){ state.count=0; state.order='seq'; }   // 세트별: 순서대로 기본
-      else { state.count=0; state.order='random'; }            // AI·섞어서: 전체 기본
+      if(m.id==='set'){
+        state.selectedSets=new Set(sampleSets());  // 세트별: 샘플 전체 선택 기본
+        state.count=0; state.order='seq';          // 순서대로 기본
+      }else if(m.id==='mixed'){
+        state.selectedSets=new Set([...sampleSets(), ...(hasAI()?['AI']:[])]); // 섞어서: 샘플+AI 전체 선택 기본
+        state.count=0; state.order='random';
+      }else{
+        state.selectedSets=new Set();              // AI: 세트 선택 섹션 없음
+        state.count=0; state.order='random';
+      }
       state.grading='instant';
       buildModes();renderConfig();
     };
@@ -604,35 +613,41 @@ function renderConfig(){
   if(chapters){
     const n=String(sec++).padStart(2,'0');
     html+=`<div class="card"><h2><span class="n">${n}</span> 챕터 선택</h2>
-      <p class="hint">선택한 챕터에서만 출제합니다. (기본값: 전체 선택)</p>
+      <p class="hint">선택한 챕터에서만 출제합니다.</p>
       <div class="chips" id="chipBox"></div></div>`;
   }
 
   // ── 문제 풀이 방법 ──
   const n=String(sec++).padStart(2,'0');
   // 세트별 풀기: 순서(순서대로/랜덤). 그 외: 문제 수(전체/40/20/10)
-  let methodRow;
+  const orderDescs={seq:'샘플 문제의 순서대로 문제를 표시합니다.',random:'샘플 문제의 순서를 랜덤으로 섞어 표시합니다.'};
+  let methodBlock;
   if(state.mode==='set'){
-    methodRow=`
+    methodBlock=`
       <div class="hint" style="margin-bottom:10px">샘플 문제 순서</div>
-      <div class="seg" id="orderSeg">
-        <button data-o="seq" class="${state.order==='seq'?'on':''}">순서대로</button>
-        <button data-o="random" class="${state.order==='random'?'on':''}">랜덤 순서</button>
+      <div class="row-opts">
+        <div class="seg" id="orderSeg">
+          <button data-o="seq" class="${state.order==='seq'?'on':''}">순서대로</button>
+          <button data-o="random" class="${state.order==='random'?'on':''}">랜덤 순서</button>
+        </div>
+        <span class="grade-desc" id="orderDesc"></span>
       </div>`;
   }else{
-    methodRow=`
+    methodBlock=`
       <div class="hint" style="margin-bottom:10px">풀 문제 수</div>
-      <div class="seg" id="countSeg">
-        <button data-c="0"  class="${state.count===0?'on':''}">전체</button>
-        <button data-c="40" class="${state.count===40?'on':''}">40문제</button>
-        <button data-c="20" class="${state.count===20?'on':''}">20문제</button>
-        <button data-c="10" class="${state.count===10?'on':''}">10문제</button>
+      <div class="row-opts">
+        <div class="seg" id="countSeg">
+          <button data-c="0"  class="${state.count===0?'on':''}">전체</button>
+          <button data-c="40" class="${state.count===40?'on':''}">40문제</button>
+          <button data-c="20" class="${state.count===20?'on':''}">20문제</button>
+          <button data-c="10" class="${state.count===10?'on':''}">10문제</button>
+        </div>
       </div>`;
   }
   html+=`
     <div class="card">
       <h2><span class="n">${n}</span> 문제 풀이 방법</h2>
-      <div class="row-opts">${methodRow}</div>
+      ${methodBlock}
       <div class="hint" style="margin:18px 0 10px">채점 방식</div>
       <div class="row-opts">
         <div class="seg" id="gradeSeg">
@@ -678,7 +693,11 @@ function renderConfig(){
   document.querySelectorAll('#orderSeg button').forEach(b=>b.onclick=()=>{
     document.querySelectorAll('#orderSeg button').forEach(x=>x.classList.remove('on'));
     b.classList.add('on');state.order=b.dataset.o;
+    const od=document.getElementById('orderDesc');
+    if(od) od.textContent=orderDescs[state.order];
   });
+  const odEl=document.getElementById('orderDesc');
+  if(odEl) odEl.textContent=orderDescs[state.order];
   const gradeDescs={instant:'한 문제 풀 때마다 정답과 해설을 바로 보여줍니다.',end:'끝까지 다 푼 뒤 마지막에 전체 정답과 해설을 모아서 보여줍니다.'};
   document.querySelectorAll('#gradeSeg button').forEach(b=>{
     b.onclick=()=>{
