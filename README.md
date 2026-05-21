@@ -7,10 +7,10 @@
 
 ```
 index.html       사이트 전체 (UI / 로직 / 자격증·모드 설정)
-questions.json   ISTQB CTFL 문제 데이터 (186문제)
+istqb-ctfl-kor-question.json   ISTQB CTFL 문제 데이터 (186문제)
 ```
 
-`index.html`이 같은 폴더의 `questions.json`을 `fetch`로 읽어옵니다.
+`index.html`이 같은 폴더의 `istqb-ctfl-kor-question.json`을 `fetch`로 읽어옵니다.
 
 ## 띄우는 방법
 
@@ -65,7 +65,7 @@ const CERTS = [
   {
     id:'istqb-ctfl',          // 내부 식별자 (고유)
     name:'ISTQB CTFL',         // 탭에 표시될 이름
-    file:'questions.json',     // 문제 JSON 경로
+    file:'istqb-ctfl-kor-question.json',     // 문제 JSON 경로
     ready:true,                // false면 "준비 중" 탭
     chapters:{ '1':'1. ...', ... },  // 챕터 필터용 (없으면 챕터 필터 숨김)
     title:'... <em>강조</em> ...',   // 홈 제목
@@ -81,7 +81,7 @@ const CERTS = [
 
 ## 새 문제(AI 포함) 추가하기
 
-`questions.json`은 아래 형식의 객체 배열입니다. 같은 형식으로 항목을 추가하면
+`istqb-ctfl-kor-question.json`은 아래 형식의 객체 배열입니다. 같은 형식으로 항목을 추가하면
 코드 수정 없이 자동 반영됩니다.
 
 ```json

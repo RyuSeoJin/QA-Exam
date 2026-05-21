@@ -422,7 +422,7 @@ const CERTS = [
     id:'istqb-ctfl',
     name:'ISTQB CTFL',
     sub:'Foundation Level v4.0',
-    file:'questions.json',
+    file:'istqb-ctfl-kor-question.json',
     ready:true,
     chapters:{
       '1':'1. 테스팅의 기초','2':'2. SDLC 전반의 테스팅','3':'3. 정적 테스팅',
@@ -717,7 +717,11 @@ function startQuiz(pool,isReview=false){
   if(!pool.length){alert('풀 문제가 없습니다.');return;}
   let qs;
   if(state.order==='seq' && !isReview){
-    qs=pool.slice().sort((a,b)=>a.set.localeCompare(b.set)||numKey(a.num)-numKey(b.num));
+    const setRank={A:0,B:1,C:2,D:3,AI:9};
+    qs=pool.slice().sort((a,b)=>
+      (setRank[a.set]??8)-(setRank[b.set]??8)         // 세트 순서 A→B→C→D
+      || (a.extra?1:0)-(b.extra?1:0)                   // 메인(1~40) 먼저, 부록(A1~) 나중
+      || numKey(a.num)-numKey(b.num));                 // 번호 순
   }else qs=shuffle(pool);
   if(!isReview && state.count>0) qs=qs.slice(0,state.count);
   session={list:qs,idx:0,score:0,wrongIds:[],isReview,grading:state.grading,answers:[]};
