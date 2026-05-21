@@ -3,10 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ISTQB CTFL 랜덤 문제 풀이</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=IBM+Plex+Sans+KR:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<title>Certification Exam</title>
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin="anonymous">
+<link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css" />
 <style>
 :root{
   --bg:#0f1115;
@@ -26,6 +25,8 @@
   --green:#6fd99a;
   --shadow:0 18px 50px -20px rgba(0,0,0,.7);
   --radius:14px;
+  --mono:'Pretendard Variable',ui-monospace,SFMono-Regular,Menlo,monospace;
+  --sans:'Pretendard Variable',-apple-system,BlinkMacSystemFont,system-ui,'Apple SD Gothic Neo','Noto Sans KR',sans-serif;
 }
 *{box-sizing:border-box;margin:0;padding:0}
 html{scroll-behavior:smooth}
@@ -35,30 +36,52 @@ body{
     radial-gradient(900px 600px at -5% 100%, rgba(240,192,96,.05), transparent 55%),
     var(--bg);
   color:var(--ink);
-  font-family:'IBM Plex Sans KR',system-ui,sans-serif;
-  font-size:16px;line-height:1.6;
+  font-family:var(--sans);
+  font-size:16px;line-height:1.6;letter-spacing:-.01em;
   -webkit-font-smoothing:antialiased;
   min-height:100vh;
 }
-.wrap{max-width:860px;margin:0 auto;padding:0 20px 120px}
+.wrap{max-width:880px;margin:0 auto;padding:0 20px 120px}
+.mono{font-family:var(--mono);font-feature-settings:'tnum' 1}
 
-/* ---------- Header ---------- */
+/* ---------- Header + cert tabs ---------- */
 header.top{
   position:sticky;top:0;z-index:50;
-  background:rgba(15,17,21,.82);backdrop-filter:blur(14px);
+  background:rgba(15,17,21,.84);backdrop-filter:blur(14px);
   border-bottom:1px solid var(--line);
 }
-.top-inner{max-width:860px;margin:0 auto;padding:14px 20px;display:flex;align-items:center;gap:14px}
-.brand{display:flex;align-items:baseline;gap:10px;flex:1;min-width:0}
-.brand .mark{
-  font-family:'Fraunces',serif;font-weight:600;font-size:22px;letter-spacing:-.01em;
-  color:var(--ink);white-space:nowrap;
+.top-inner{max-width:880px;margin:0 auto;padding:13px 20px 0}
+.brand-row{display:flex;align-items:center;gap:12px}
+.brand{display:flex;align-items:center;gap:10px;flex:1;min-width:0;cursor:pointer}
+.brand .logo{
+  width:30px;height:30px;border-radius:9px;flex-shrink:0;
+  background:linear-gradient(135deg,var(--accent),var(--accent-deep));
+  display:grid;place-items:center;color:#08110d;font-weight:800;font-size:16px;
 }
-.brand .mark b{color:var(--accent);font-style:italic;font-weight:500}
-.brand .sub{font-size:12px;color:var(--ink-3);font-family:'IBM Plex Mono',monospace;white-space:nowrap}
-@media(max-width:560px){.brand .sub{display:none}}
-.progress-mini{font-family:'IBM Plex Mono',monospace;font-size:12.5px;color:var(--ink-2);white-space:nowrap}
-.progress-mini b{color:var(--accent)}
+.brand .name{font-weight:700;font-size:18px;letter-spacing:-.02em;white-space:nowrap}
+.brand .name b{color:var(--accent);font-weight:700}
+.progress-mini{font-family:var(--mono);font-size:12.5px;color:var(--ink-2);white-space:nowrap}
+.progress-mini b{color:var(--accent);font-weight:600}
+
+.tabs{display:flex;gap:4px;margin-top:12px;overflow-x:auto;scrollbar-width:none}
+.tabs::-webkit-scrollbar{display:none}
+.tab{
+  padding:11px 18px;font-size:14px;font-weight:600;color:var(--ink-3);
+  border:none;background:none;position:relative;white-space:nowrap;
+  border-radius:9px 9px 0 0;transition:color .15s;display:flex;align-items:center;gap:7px;
+}
+.tab:hover{color:var(--ink-2)}
+.tab.on{color:var(--ink)}
+.tab.on::after{
+  content:'';position:absolute;left:14px;right:14px;bottom:-1px;height:2px;
+  background:var(--accent);border-radius:2px;
+}
+.tab .dot{width:6px;height:6px;border-radius:99px;background:var(--accent-deep)}
+.tab.soon{color:var(--ink-3);cursor:default}
+.tab.soon .badge{
+  font-size:10px;font-weight:600;color:var(--ink-3);
+  border:1px solid var(--line-2);border-radius:5px;padding:1px 5px;
+}
 
 /* ---------- Buttons ---------- */
 button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit}
@@ -75,75 +98,104 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;color:inhe
 .btn-ghost:hover{border-color:var(--accent);color:var(--accent)}
 .btn-sm{padding:8px 14px;font-size:13.5px;border-radius:9px}
 .btn[disabled]{opacity:.4;cursor:not-allowed}
+.btn[disabled]:hover{filter:none;border-color:var(--line-2);color:var(--ink)}
 
-/* ---------- Home / Setup ---------- */
-.hero{padding:46px 0 26px;text-align:center}
+/* ---------- Hero ---------- */
+.hero{padding:40px 0 18px}
 .hero .eyebrow{
-  font-family:'IBM Plex Mono',monospace;font-size:12px;letter-spacing:.22em;
-  text-transform:uppercase;color:var(--accent-deep);margin-bottom:16px;
+  font-family:var(--mono);font-size:12px;letter-spacing:.2em;
+  text-transform:uppercase;color:var(--accent-deep);margin-bottom:14px;font-weight:600;
 }
-.hero h1{
-  font-family:'Fraunces',serif;font-weight:500;line-height:1.1;
-  font-size:clamp(34px,7vw,52px);letter-spacing:-.02em;margin-bottom:14px;
-}
-.hero h1 em{font-style:italic;color:var(--accent)}
-.hero p{color:var(--ink-2);max-width:520px;margin:0 auto;font-size:15.5px}
+.hero h1{font-weight:700;line-height:1.12;font-size:clamp(30px,6vw,44px);letter-spacing:-.03em;margin-bottom:12px}
+.hero h1 em{font-style:normal;color:var(--accent)}
+.hero p{color:var(--ink-2);max-width:540px;font-size:15.5px}
 
+/* ---------- Cards ---------- */
 .card{
   background:linear-gradient(180deg,var(--panel),var(--bg-2));
   border:1px solid var(--line);border-radius:var(--radius);
-  box-shadow:var(--shadow);padding:26px;margin-top:22px;
+  box-shadow:var(--shadow);padding:24px;margin-top:20px;
 }
-.card h2{
-  font-family:'Fraunces',serif;font-weight:500;font-size:21px;
-  display:flex;align-items:center;gap:10px;margin-bottom:6px;
-}
-.card h2 .n{
-  font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--accent-deep);
-  border:1px solid var(--line-2);border-radius:6px;padding:2px 8px;font-weight:500;
-}
+.card h2{font-weight:700;font-size:18px;display:flex;align-items:center;gap:10px;margin-bottom:5px;letter-spacing:-.02em}
+.card h2 .n{font-family:var(--mono);font-size:12px;color:var(--accent-deep);border:1px solid var(--line-2);border-radius:6px;padding:2px 8px;font-weight:600}
 .card .hint{color:var(--ink-3);font-size:13.5px;margin-bottom:18px}
+
+/* ---------- Mode selector ---------- */
+.modes{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px}
+@media(max-width:640px){.modes{grid-template-columns:1fr}}
+.mode{
+  text-align:left;padding:18px;border-radius:12px;
+  background:var(--panel-2);border:1px solid var(--line);
+  transition:all .15s;position:relative;overflow:hidden;
+}
+.mode:not(.soon):hover{border-color:var(--accent-deep);transform:translateY(-2px)}
+.mode.on{border-color:var(--accent);background:rgba(126,224,192,.08)}
+.mode .ico{font-size:22px;margin-bottom:10px;display:block}
+.mode .mt{font-weight:700;font-size:15.5px;margin-bottom:4px;letter-spacing:-.02em}
+.mode .md{font-size:12.5px;color:var(--ink-3);line-height:1.5}
+.mode.soon{opacity:.6;cursor:default}
+.mode.soon .badge{
+  position:absolute;top:14px;right:14px;font-size:10px;font-weight:600;
+  color:var(--amber);border:1px solid rgba(240,192,96,.35);border-radius:5px;padding:2px 6px;
+}
+
+/* set picker */
+.sets{display:flex;flex-wrap:wrap;gap:9px;margin-top:4px}
+.setchip{
+  display:flex;align-items:center;gap:9px;padding:11px 16px;border-radius:10px;
+  background:var(--panel-2);border:1px solid var(--line);font-size:14px;
+  color:var(--ink-2);transition:all .15s;font-weight:500;
+}
+.setchip:hover{border-color:var(--line-2);color:var(--ink)}
+.setchip.on{background:rgba(126,224,192,.12);border-color:var(--accent);color:var(--accent)}
+.setchip .cnt{font-family:var(--mono);font-size:11.5px;color:var(--ink-3)}
+.setchip.on .cnt{color:var(--accent-deep)}
 
 /* chapter chips */
 .chips{display:flex;flex-wrap:wrap;gap:9px}
 .chip{
-  display:flex;align-items:center;gap:8px;
-  padding:10px 14px;border-radius:10px;
-  background:var(--panel-2);border:1px solid var(--line);
-  font-size:14px;color:var(--ink-2);transition:all .15s;user-select:none;
+  display:flex;align-items:center;gap:8px;padding:10px 14px;border-radius:10px;
+  background:var(--panel-2);border:1px solid var(--line);font-size:13.5px;
+  color:var(--ink-2);transition:all .15s;user-select:none;font-weight:500;
 }
 .chip:hover{border-color:var(--line-2);color:var(--ink)}
-.chip.on{
-  background:rgba(126,224,192,.12);border-color:var(--accent-deep);color:var(--accent);
-}
-.chip .cnt{font-family:'IBM Plex Mono',monospace;font-size:11.5px;color:var(--ink-3)}
+.chip.on{background:rgba(126,224,192,.12);border-color:var(--accent-deep);color:var(--accent)}
+.chip .cnt{font-family:var(--mono);font-size:11px;color:var(--ink-3)}
 .chip.on .cnt{color:var(--accent-deep)}
 .chip .ck{width:15px;height:15px;border-radius:4px;border:1.5px solid var(--line-2);display:grid;place-items:center;font-size:10px;flex-shrink:0;color:transparent}
 .chip.on .ck{background:var(--accent-deep);border-color:var(--accent-deep);color:#08110d}
 
-.row-opts{display:flex;flex-wrap:wrap;gap:10px;margin-top:4px}
+.row-opts{display:flex;flex-wrap:wrap;gap:10px}
 .seg{display:flex;background:var(--panel-2);border:1px solid var(--line);border-radius:10px;overflow:hidden}
 .seg button{padding:9px 16px;font-size:13.5px;font-weight:500;color:var(--ink-2);transition:all .15s}
 .seg button.on{background:var(--accent-deep);color:#08110d;font-weight:600}
 .seg button:not(.on):hover{color:var(--ink);background:var(--panel)}
 
-.start-bar{display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin-top:26px}
-.start-bar .info{flex:1;min-width:160px;font-size:13.5px;color:var(--ink-3);font-family:'IBM Plex Mono',monospace}
-.start-bar .info b{color:var(--ink);font-weight:500}
+.start-bar{display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin-top:24px}
+.start-bar .info{flex:1;min-width:160px;font-size:13.5px;color:var(--ink-3);font-family:var(--mono)}
+.start-bar .info b{color:var(--ink);font-weight:600}
 
-/* wrong-note teaser */
+/* wrong note */
 .note-card{display:flex;align-items:center;gap:16px;flex-wrap:wrap}
-.note-card .big{font-family:'Fraunces',serif;font-size:40px;color:var(--rose);line-height:1}
+.note-card .big{font-weight:700;font-size:38px;color:var(--rose);line-height:1;font-family:var(--mono)}
 .note-card .txt{flex:1;min-width:140px}
 .note-card .txt .t1{font-weight:600;font-size:15px}
 .note-card .txt .t2{font-size:13px;color:var(--ink-3)}
 
-/* ---------- Quiz ---------- */
-.quizbar{
-  display:flex;align-items:center;gap:14px;margin:24px 0 8px;flex-wrap:wrap;
+/* placeholder panel for soon-modes */
+.soon-panel{
+  text-align:center;padding:40px 20px;color:var(--ink-3);
+  border:1px dashed var(--line-2);border-radius:12px;background:var(--bg);
 }
-.quizbar .meta{font-family:'IBM Plex Mono',monospace;font-size:13px;color:var(--ink-2)}
-.quizbar .meta b{color:var(--accent)}
+.soon-panel .ico{font-size:34px;margin-bottom:12px}
+.soon-panel .t{font-weight:600;color:var(--ink-2);font-size:16px;margin-bottom:6px}
+.soon-panel .d{font-size:13.5px;line-height:1.7;max-width:440px;margin:0 auto}
+.soon-panel code{font-family:var(--mono);background:var(--panel-2);padding:1px 6px;border-radius:5px;color:var(--accent-deep);font-size:12.5px}
+
+/* ---------- Quiz ---------- */
+.quizbar{display:flex;align-items:center;gap:14px;margin:24px 0 8px;flex-wrap:wrap}
+.quizbar .meta{font-family:var(--mono);font-size:13px;color:var(--ink-2)}
+.quizbar .meta b{color:var(--accent);font-weight:600}
 .progress-track{flex:1;min-width:120px;height:6px;background:var(--panel-2);border-radius:99px;overflow:hidden;border:1px solid var(--line)}
 .progress-fill{height:100%;background:linear-gradient(90deg,var(--accent-deep),var(--accent));width:0;transition:width .35s cubic-bezier(.4,0,.2,1)}
 
@@ -155,32 +207,26 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;color:inhe
 }
 @keyframes rise{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
 .q-tags{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px}
-.tag{
-  font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.04em;
-  padding:3px 9px;border-radius:6px;border:1px solid var(--line-2);color:var(--ink-3);
-}
+.tag{font-family:var(--mono);font-size:11px;letter-spacing:.02em;padding:3px 9px;border-radius:6px;border:1px solid var(--line-2);color:var(--ink-3);font-weight:500}
 .tag.k{color:var(--amber);border-color:rgba(240,192,96,.3)}
 .tag.lo{color:var(--accent-deep);border-color:rgba(52,199,154,.3)}
-.tag.src{color:var(--ink-3)}
 .tag.multi{color:var(--rose);border-color:rgba(240,133,125,.35)}
-.q-stem{font-size:17.5px;line-height:1.65;margin-bottom:6px;white-space:pre-wrap;font-weight:500}
-.q-multi-hint{font-size:12.5px;color:var(--rose);margin:10px 0 4px;font-family:'IBM Plex Mono',monospace}
+.q-stem{font-size:17.5px;line-height:1.65;margin-bottom:6px;white-space:pre-wrap;font-weight:600;letter-spacing:-.02em}
+.q-multi-hint{font-size:12.5px;color:var(--rose);margin:10px 0 4px;font-family:var(--mono)}
 
 .opts{display:flex;flex-direction:column;gap:10px;margin-top:18px}
 .opt{
-  display:flex;gap:13px;align-items:flex-start;text-align:left;
-  padding:14px 16px;border-radius:11px;width:100%;
-  background:var(--panel-2);border:1px solid var(--line);
+  display:flex;gap:13px;align-items:flex-start;text-align:left;padding:14px 16px;
+  border-radius:11px;width:100%;background:var(--panel-2);border:1px solid var(--line);
   transition:border-color .15s,background .15s,transform .1s;
   font-size:15.5px;line-height:1.55;color:var(--ink);
 }
 .opt:hover:not(.locked){border-color:var(--line-2);background:var(--panel)}
 .opt:active:not(.locked){transform:scale(.995)}
 .opt .key{
-  flex-shrink:0;width:26px;height:26px;border-radius:7px;
-  border:1.5px solid var(--line-2);display:grid;place-items:center;
-  font-family:'IBM Plex Mono',monospace;font-weight:500;font-size:13px;color:var(--ink-2);
-  transition:all .15s;text-transform:lowercase;
+  flex-shrink:0;width:26px;height:26px;border-radius:7px;border:1.5px solid var(--line-2);
+  display:grid;place-items:center;font-family:var(--mono);font-weight:600;font-size:13px;
+  color:var(--ink-2);transition:all .15s;text-transform:lowercase;
 }
 .opt.sel .key{border-color:var(--accent);color:var(--accent);background:rgba(126,224,192,.1)}
 .opt.locked{cursor:default}
@@ -193,61 +239,90 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;color:inhe
 .q-actions{display:flex;gap:12px;margin-top:22px;flex-wrap:wrap}
 .q-actions .spacer{flex:1}
 
-/* explanation */
-.expl{
-  margin-top:20px;border-top:1px dashed var(--line-2);padding-top:20px;
-  animation:rise .3s ease;
-}
-.expl .verdict{display:flex;align-items:center;gap:10px;font-weight:600;font-size:16px;margin-bottom:12px}
+.expl{margin-top:20px;border-top:1px dashed var(--line-2);padding-top:20px;animation:rise .3s ease}
+.expl .verdict{display:flex;align-items:center;gap:10px;font-weight:700;font-size:16px;margin-bottom:12px}
 .expl .verdict.ok{color:var(--green)}
 .expl .verdict.no{color:var(--rose)}
-.expl .verdict .ans{font-family:'IBM Plex Mono',monospace;font-size:13px;color:var(--ink-3);font-weight:400;margin-left:auto}
-.expl-body{
-  background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:16px 18px;
-  font-size:14.5px;line-height:1.72;color:var(--ink-2);white-space:pre-wrap;
-}
-.expl-body strong{color:var(--ink)}
+.expl .verdict .ans{font-family:var(--mono);font-size:13px;color:var(--ink-3);font-weight:500;margin-left:auto}
+.expl-body{background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:16px 18px;font-size:14.5px;line-height:1.72;color:var(--ink-2);white-space:pre-wrap}
 
 /* ---------- Result ---------- */
 .result{text-align:center;padding-top:30px}
 .result .ring{margin:0 auto 22px;width:170px;height:170px;position:relative}
 .result .ring svg{transform:rotate(-90deg)}
-.result .ring .pct{
-  position:absolute;inset:0;display:grid;place-content:center;
-  font-family:'Fraunces',serif;font-size:46px;font-weight:500;
-}
-.result .ring .pct small{font-size:16px;color:var(--ink-3);display:block;font-family:'IBM Plex Mono',monospace}
-.result h2{font-family:'Fraunces',serif;font-weight:500;font-size:30px;margin-bottom:8px}
+.result .ring .pct{position:absolute;inset:0;display:grid;place-content:center;font-weight:700;font-size:46px;font-family:var(--mono)}
+.result .ring .pct small{font-size:15px;color:var(--ink-3);display:block;font-family:var(--sans);font-weight:500;margin-top:4px}
+.result h2{font-weight:700;font-size:26px;margin-bottom:8px;letter-spacing:-.02em}
 .result .line{color:var(--ink-2);margin-bottom:4px}
-.result .line b{color:var(--accent)}
+.result .line b{color:var(--accent);font-weight:600}
 .stat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:28px 0}
 .stat{background:var(--panel);border:1px solid var(--line);border-radius:11px;padding:16px 10px}
-.stat .v{font-family:'Fraunces',serif;font-size:28px;line-height:1}
+.stat .v{font-weight:700;font-size:28px;line-height:1;font-family:var(--mono)}
 .stat .v.g{color:var(--green)}.stat .v.r{color:var(--rose)}
 .stat .l{font-size:12px;color:var(--ink-3);margin-top:6px}
 .result-actions{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
 
-/* footer note */
 .foot{margin-top:40px;text-align:center;color:var(--ink-3);font-size:12.5px;line-height:1.8}
-.foot a{color:var(--accent-deep);text-decoration:none}
-.foot code{font-family:'IBM Plex Mono',monospace;background:var(--panel-2);padding:1px 6px;border-radius:5px;color:var(--ink-2)}
+.foot code{font-family:var(--mono);background:var(--panel-2);padding:1px 6px;border-radius:5px;color:var(--ink-2)}
+
+.grade-desc{font-size:12.5px;color:var(--ink-3);align-self:center;line-height:1.4}
+
+/* ---------- Review list (전체 해설) ---------- */
+.review-list{margin-top:34px}
+.rev-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
+.rev-head h3{font-weight:700;font-size:18px;letter-spacing:-.02em}
+.rev-item{
+  background:var(--panel);border:1px solid var(--line);border-radius:12px;
+  margin-bottom:10px;overflow:hidden;transition:border-color .15s;
+}
+.rev-item.no{border-color:rgba(224,82,74,.3)}
+.rev-q{display:flex;align-items:center;gap:11px;padding:15px 16px;cursor:pointer;user-select:none}
+.rev-q:hover{background:var(--panel-2)}
+.rev-no{font-family:var(--mono);font-size:12px;color:var(--ink-3);width:22px;flex-shrink:0;font-weight:600}
+.rev-badge{font-size:11px;font-weight:700;padding:2px 8px;border-radius:6px;flex-shrink:0}
+.rev-badge.g{color:var(--green);background:rgba(111,217,154,.12)}
+.rev-badge.r{color:var(--rose);background:rgba(240,133,125,.12)}
+.rev-stem{flex:1;min-width:0;font-size:14.5px;font-weight:500;line-height:1.5;
+  display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.rev-chev{color:var(--ink-3);font-size:13px;transition:transform .2s;flex-shrink:0}
+.rev-item.open .rev-chev{transform:rotate(180deg)}
+.rev-item.open .rev-stem{-webkit-line-clamp:unset;display:block}
+.rev-detail{display:none;padding:0 16px 16px;border-top:1px solid var(--line)}
+.rev-item.open .rev-detail{display:block}
+.rev-opts{display:flex;flex-direction:column;gap:6px;margin:14px 0}
+.rev-opt{display:flex;gap:10px;align-items:flex-start;font-size:14px;line-height:1.5;
+  padding:9px 12px;border-radius:8px;background:var(--panel-2);border:1px solid transparent;color:var(--ink-2)}
+.rev-opt.correct{border-color:var(--accent-deep);background:rgba(52,199,154,.09);color:var(--ink)}
+.rev-opt.wrong{border-color:var(--rose-deep);background:rgba(224,82,74,.08);color:var(--ink)}
+.rev-opt .rk{font-family:var(--mono);font-size:12px;font-weight:600;width:16px;flex-shrink:0;text-transform:lowercase;color:var(--ink-3)}
+.rev-opt.correct .rk{color:var(--accent-deep)}
+.rev-opt.wrong .rk{color:var(--rose)}
+.rev-opt .rm{margin-left:auto;flex-shrink:0;font-weight:700}
+.rev-opt.correct .rm{color:var(--accent-deep)}
+.rev-opt.wrong .rm{color:var(--rose)}
+.rev-meta{font-size:11.5px;color:var(--ink-3);margin-bottom:10px}
+.rev-expl{background:var(--bg);border:1px solid var(--line);border-radius:9px;
+  padding:13px 15px;font-size:13.5px;line-height:1.7;color:var(--ink-2);white-space:pre-wrap}
 
 .hidden{display:none!important}
-.loading{text-align:center;padding:80px 0;color:var(--ink-3);font-family:'IBM Plex Mono',monospace}
+.loading{text-align:center;padding:80px 0;color:var(--ink-3);font-family:var(--mono)}
 .spinner{width:34px;height:34px;border:3px solid var(--line);border-top-color:var(--accent);border-radius:99px;margin:0 auto 18px;animation:spin .8s linear infinite}
 @keyframes spin{to{transform:rotate(360deg)}}
 .err{background:rgba(224,82,74,.1);border:1px solid var(--rose-deep);border-radius:11px;padding:20px;color:var(--ink);font-size:14px;line-height:1.7}
-.err code{font-family:'IBM Plex Mono',monospace;font-size:13px;color:var(--amber)}
+.err code{font-family:var(--mono);font-size:13px;color:var(--amber)}
 </style>
 </head>
 <body>
 <header class="top">
   <div class="top-inner">
-    <div class="brand">
-      <span class="mark">ISTQB <b>CTFL</b></span>
-      <span class="sub">Foundation Level v4.0</span>
+    <div class="brand-row">
+      <div class="brand" onclick="goHome()">
+        <span class="logo">C</span>
+        <span class="name">Certification <b>Exam</b></span>
+      </div>
+      <span class="progress-mini" id="miniStat"></span>
     </div>
-    <span class="progress-mini" id="miniStat"></span>
+    <div class="tabs" id="certTabs"></div>
   </div>
 </header>
 
@@ -262,39 +337,20 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;color:inhe
   <!-- ============ HOME ============ -->
   <div id="home" class="hidden">
     <div class="hero">
-      <div class="eyebrow">Random Practice</div>
-      <h1>테스팅 자격증<br><em>랜덤 문제 풀이</em></h1>
-      <p>실러버스 기반 샘플 문제로 연습하세요. 챕터를 골라 원하는 영역만 집중적으로 풀 수 있습니다.</p>
+      <div class="eyebrow" id="heroEyebrow">Random Practice</div>
+      <h1 id="heroTitle"></h1>
+      <p id="heroDesc"></p>
     </div>
 
-    <!-- chapter filter -->
+    <!-- mode selector -->
     <div class="card">
-      <h2><span class="n">01</span> 챕터 선택</h2>
-      <p class="hint">특정 챕터만 선택하면 그 챕터에서만 출제됩니다. 아무것도 선택하지 않으면 전체에서 랜덤 출제됩니다.</p>
-      <div class="chips" id="chipBox"></div>
+      <h2><span class="n">01</span> 풀이 모드</h2>
+      <p class="hint">어떤 방식으로 문제를 풀지 선택하세요.</p>
+      <div class="modes" id="modeBox"></div>
     </div>
 
-    <!-- options -->
-    <div class="card">
-      <h2><span class="n">02</span> 풀이 설정</h2>
-      <p class="hint">문제 수와 순서를 정합니다.</p>
-      <div class="row-opts">
-        <div class="seg" id="countSeg">
-          <button data-c="10">10문제</button>
-          <button data-c="20" class="on">20문제</button>
-          <button data-c="40">40문제</button>
-          <button data-c="0">전체</button>
-        </div>
-        <div class="seg" id="orderSeg">
-          <button data-o="random" class="on">랜덤 순서</button>
-          <button data-o="seq">순서대로</button>
-        </div>
-      </div>
-      <div class="start-bar">
-        <div class="info" id="poolInfo"></div>
-        <button class="btn btn-primary" id="startBtn">풀이 시작 →</button>
-      </div>
-    </div>
+    <!-- dynamic config panel (set picker / chapter / count) -->
+    <div id="configPanel"></div>
 
     <!-- wrong note -->
     <div class="card hidden" id="noteCard">
@@ -310,10 +366,7 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;color:inhe
       </div>
     </div>
 
-    <div class="foot">
-      문제 출처: KSTQB 공개 샘플 문제(A·B·C·D) · 실러버스 v4.0.1 기반<br>
-      나중에 AI로 만든 문제를 추가하려면 <code>questions.json</code>에 같은 형식으로 넣기만 하면 됩니다.
-    </div>
+    <div class="foot" id="homeFoot"></div>
   </div>
 
   <!-- ============ QUIZ ============ -->
@@ -345,45 +398,102 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;color:inhe
         <div class="stat"><div class="v" id="sNote">0</div><div class="l">오답노트 누적</div></div>
       </div>
       <div class="result-actions">
-        <button class="btn btn-primary" id="againBtn">새 문제 풀기</button>
+        <button class="btn btn-primary" id="againBtn">홈으로</button>
         <button class="btn btn-ghost" id="reviewWrongBtn">방금 틀린 문제 복습</button>
       </div>
     </div>
+    <div id="reviewList" class="review-list"></div>
   </div>
 
 </div>
 
 <script>
-const CHAPTERS = {
-  '1':'1. 테스팅의 기초',
-  '2':'2. SDLC 전반의 테스팅',
-  '3':'3. 정적 테스팅',
-  '4':'4. 테스트 분석 및 설계',
-  '5':'5. 테스트 활동 관리',
-  '6':'6. 테스트 도구',
-};
-const LS_NOTE = 'istqb_wrong_notes_v1';
+/* =========================================================
+   CERTIFICATION REGISTRY
+   새 자격증을 추가하려면 여기에 항목을 추가하세요.
+   - id      : 내부 식별자
+   - name    : 탭에 표시될 이름
+   - file    : 문제 JSON 경로 (없으면 'soon' 처리)
+   - chapters: 챕터번호 -> 표시명 (챕터 필터용, 없으면 챕터 필터 숨김)
+   - ready   : false면 "준비 중" 탭으로 표시
+========================================================= */
+const CERTS = [
+  {
+    id:'istqb-ctfl',
+    name:'ISTQB CTFL',
+    sub:'Foundation Level v4.0',
+    file:'questions.json',
+    ready:true,
+    chapters:{
+      '1':'1. 테스팅의 기초','2':'2. SDLC 전반의 테스팅','3':'3. 정적 테스팅',
+      '4':'4. 테스트 분석 및 설계','5':'5. 테스트 활동 관리','6':'6. 테스트 도구',
+    },
+    title:'ISTQB CTFL <em>문제 풀이</em>',
+    desc:'실러버스 v4.0.1 기반 KSTQB 공개 샘플 문제(A·B·C·D)로 연습하세요.',
+  },
+  // 예시) 다른 자격증을 추가할 때:
+  // { id:'csts', name:'CSTS', sub:'준비 중', file:null, ready:false },
+];
 
-let ALL = [];                 // all questions
-let session = null;           // current quiz session
+const LS_NOTE = 'cert_exam_wrong_notes_v1';
+
+let activeCert = null;
+let ALL = [];                 // questions of active cert
+const cache = {};             // certId -> questions[]
+let session = null;
 const state = {
+  mode:'mixed',               // 'set' | 'mixed' | 'ai'
+  selectedSets:new Set(),     // for set mode
   selectedChapters:new Set(), // empty = all
   count:20,
   order:'random',
+  grading:'instant',          // 'instant' (즉시 채점) | 'end' (모아서 채점)
 };
 
-/* ---------- load data ---------- */
-async function load(){
+/* ---------- notes (per cert) ---------- */
+function noteKey(){ return LS_NOTE+':'+activeCert.id }
+function getNotes(){ try{return JSON.parse(localStorage.getItem(noteKey()))||[]}catch{return[]} }
+function setNotes(a){ localStorage.setItem(noteKey(), JSON.stringify([...new Set(a)])) }
+
+/* ---------- boot ---------- */
+function buildTabs(){
+  const box=document.getElementById('certTabs');
+  box.innerHTML='';
+  CERTS.forEach(c=>{
+    const t=document.createElement('button');
+    t.className='tab'+(c.ready?'':' soon')+(activeCert&&activeCert.id===c.id?' on':'');
+    t.innerHTML = c.ready
+      ? `${activeCert&&activeCert.id===c.id?'<span class="dot"></span>':''}${c.name}`
+      : `${c.name}<span class="badge">준비 중</span>`;
+    if(c.ready) t.onclick=()=>selectCert(c.id);
+    box.appendChild(t);
+  });
+}
+
+async function selectCert(id){
+  const cert=CERTS.find(c=>c.id===id);
+  activeCert=cert;
+  buildTabs();
+  show('home');
+  document.getElementById('loading').classList.remove('hidden');
+  document.getElementById('home').classList.add('hidden');
   try{
-    const res = await fetch('questions.json',{cache:'no-store'});
-    if(!res.ok) throw new Error('HTTP '+res.status);
-    ALL = await res.json();
+    if(!cache[id]){
+      const res=await fetch(cert.file,{cache:'no-store'});
+      if(!res.ok) throw new Error('HTTP '+res.status);
+      cache[id]=await res.json();
+    }
+    ALL=cache[id];
     if(!Array.isArray(ALL)||!ALL.length) throw new Error('빈 데이터');
+    document.getElementById('loading').classList.add('hidden');
+    document.getElementById('home').classList.remove('hidden');
     initHome();
   }catch(e){
-    document.getElementById('loading').innerHTML =
+    document.getElementById('loading').classList.remove('hidden');
+    document.getElementById('home').classList.add('hidden');
+    document.getElementById('loading').innerHTML=
       `<div class="err"><b>문제 데이터를 불러오지 못했습니다.</b><br><br>
-       이 페이지는 <code>questions.json</code>이 같은 폴더에 있어야 동작합니다.
+       이 페이지는 <code>${cert.file}</code>이 같은 폴더에 있어야 동작합니다.
        파일을 더블클릭으로 직접 열면 브라우저 보안정책(CORS)으로 막힐 수 있어요.<br><br>
        <b>해결:</b> GitHub Pages에 올리거나, 폴더에서 <code>python -m http.server</code>로 띄운 뒤
        <code>localhost:8000</code>으로 접속하세요.<br><br>
@@ -391,34 +501,129 @@ async function load(){
   }
 }
 
-/* ---------- home ---------- */
-function getNotes(){ try{return JSON.parse(localStorage.getItem(LS_NOTE))||[]}catch{return[]} }
-function setNotes(a){ localStorage.setItem(LS_NOTE, JSON.stringify([...new Set(a)])) }
+/* ---------- home / mode ---------- */
+function setsInData(){
+  const c={}; ALL.forEach(q=>c[q.set]=(c[q.set]||0)+1);
+  return c;
+}
+function hasAI(){ return ALL.some(q=>q.set==='AI') }
 
 function initHome(){
-  document.getElementById('loading').classList.add('hidden');
-  document.getElementById('home').classList.remove('hidden');
+  document.getElementById('heroTitle').innerHTML=activeCert.title||activeCert.name;
+  document.getElementById('heroDesc').textContent=activeCert.desc||'';
+  document.getElementById('homeFoot').innerHTML=
+    `문제 출처: KSTQB 공개 샘플 문제 · 실러버스 기반 · 학습용<br>
+     새 문제는 <code>${activeCert.file}</code>에 같은 형식으로 추가하면 자동 반영됩니다.`;
 
-  // chapter chips
-  const counts={};
-  ALL.forEach(q=>counts[q.chapter]=(counts[q.chapter]||0)+1);
-  const box=document.getElementById('chipBox');
+  state.mode='mixed';
+  state.selectedSets=new Set();
+  state.selectedChapters=new Set();
+
+  buildModes();
+  renderConfig();
+  refreshNote();
+  updateMini();
+}
+
+function buildModes(){
+  const box=document.getElementById('modeBox');
+  const aiReady=hasAI();
+  const modes=[
+    {id:'set',  ico:'🗂️', t:'세트별 풀기', d:'샘플문제 A·B·C·D 버전을 골라서 풉니다.'},
+    {id:'mixed',ico:'🔀', t:'섞어서 풀기', d:'모든 세트를 한데 섞어 랜덤 출제합니다.'},
+    {id:'ai',   ico:'✨', t:'AI 문제 풀기', d:'AI가 생성한 문제를 풉니다.', soon:!aiReady},
+  ];
   box.innerHTML='';
-  Object.keys(CHAPTERS).forEach(ch=>{
-    if(!counts[ch]) return;
+  modes.forEach(m=>{
     const el=document.createElement('button');
-    el.className='chip';el.dataset.ch=ch;
-    el.innerHTML=`<span class="ck">✓</span><span>${CHAPTERS[ch]}</span><span class="cnt">${counts[ch]}</span>`;
-    el.onclick=()=>{
-      el.classList.toggle('on');
-      if(state.selectedChapters.has(ch)) state.selectedChapters.delete(ch);
-      else state.selectedChapters.add(ch);
-      refreshPool();
-    };
+    el.className='mode'+(state.mode===m.id?' on':'')+(m.soon?' soon':'');
+    el.innerHTML=`${m.soon?'<span class="badge">준비 중</span>':''}
+      <span class="ico">${m.ico}</span>
+      <span class="mt">${m.t}</span>
+      <span class="md">${m.d}</span>`;
+    if(!m.soon) el.onclick=()=>{state.mode=m.id;buildModes();renderConfig();};
     box.appendChild(el);
   });
+}
 
-  // segments
+function renderConfig(){
+  const panel=document.getElementById('configPanel');
+
+  if(state.mode==='ai' && !hasAI()){
+    panel.innerHTML=`
+      <div class="card">
+        <div class="soon-panel">
+          <div class="ico">✨</div>
+          <div class="t">AI 문제는 곧 추가됩니다</div>
+          <div class="d">AI로 생성한 문제를 <code>${activeCert.file}</code>에
+          <code>"set":"AI"</code> 로 추가하면, 이 모드에서 자동으로 풀 수 있게 됩니다.</div>
+        </div>
+      </div>`;
+    return;
+  }
+
+  const setCounts=setsInData();
+  const chapters=activeCert.chapters;
+  let html=`<div class="card"><h2><span class="n">02</span> 범위 선택</h2>`;
+
+  if(state.mode==='set'){
+    html+=`<p class="hint">풀 세트를 고르세요. 여러 개를 골라도 됩니다.</p><div class="sets" id="setBox"></div>`;
+  }else{
+    html+=`<p class="hint">섞어서 풀기 — ${activeCert.name}의 모든 문제가 대상입니다.</p>`;
+  }
+
+  if(chapters){
+    html+=`<div style="margin-top:18px"><div class="hint" style="margin-bottom:10px">챕터 필터 — 선택한 챕터에서만 출제 (미선택 시 전체)</div><div class="chips" id="chipBox"></div></div>`;
+  }
+  html+=`</div>`;
+
+  html+=`
+    <div class="card">
+      <h2><span class="n">03</span> 문제 수 / 순서</h2>
+      <p class="hint">한 번에 풀 문제 수와 출제 순서를 정합니다.</p>
+      <div class="row-opts">
+        <div class="seg" id="countSeg">
+          <button data-c="10">10문제</button>
+          <button data-c="20" class="on">20문제</button>
+          <button data-c="40">40문제</button>
+          <button data-c="0">전체</button>
+        </div>
+        <div class="seg" id="orderSeg">
+          <button data-o="random" class="on">랜덤 순서</button>
+          <button data-o="seq">순서대로</button>
+        </div>
+      </div>
+      <div class="hint" style="margin:18px 0 10px">채점 방식</div>
+      <div class="row-opts">
+        <div class="seg" id="gradeSeg">
+          <button data-g="instant" class="on">즉시 채점</button>
+          <button data-g="end">모아서 채점</button>
+        </div>
+        <span class="grade-desc" id="gradeDesc">한 문제 풀 때마다 정답과 해설을 바로 보여줍니다.</span>
+      </div>
+      <div class="start-bar">
+        <div class="info" id="poolInfo"></div>
+        <button class="btn btn-primary" id="startBtn">풀이 시작 →</button>
+      </div>
+    </div>`;
+  panel.innerHTML=html;
+
+  if(state.mode==='set'){
+    const sb=document.getElementById('setBox');
+    Object.keys(setCounts).filter(s=>s!=='AI').sort().forEach(s=>{
+      const el=document.createElement('button');
+      el.className='setchip'+(state.selectedSets.has(s)?' on':'');
+      el.innerHTML=`<span>샘플 ${s}</span><span class="cnt">${setCounts[s]}</span>`;
+      el.onclick=()=>{
+        state.selectedSets.has(s)?state.selectedSets.delete(s):state.selectedSets.add(s);
+        el.classList.toggle('on');refreshChapterCounts();refreshPool();
+      };
+      sb.appendChild(el);
+    });
+  }
+
+  if(chapters) buildChapterChips();
+
   document.querySelectorAll('#countSeg button').forEach(b=>b.onclick=()=>{
     document.querySelectorAll('#countSeg button').forEach(x=>x.classList.remove('on'));
     b.classList.add('on');state.count=+b.dataset.c;refreshPool();
@@ -427,168 +632,226 @@ function initHome(){
     document.querySelectorAll('#orderSeg button').forEach(x=>x.classList.remove('on'));
     b.classList.add('on');state.order=b.dataset.o;
   });
-
+  const gradeDescs={instant:'한 문제 풀 때마다 정답과 해설을 바로 보여줍니다.',end:'끝까지 다 푼 뒤 마지막에 전체 정답과 해설을 모아서 보여줍니다.'};
+  document.querySelectorAll('#gradeSeg button').forEach(b=>{
+    b.classList.toggle('on',b.dataset.g===state.grading);
+    b.onclick=()=>{
+      document.querySelectorAll('#gradeSeg button').forEach(x=>x.classList.remove('on'));
+      b.classList.add('on');state.grading=b.dataset.g;
+      document.getElementById('gradeDesc').textContent=gradeDescs[state.grading];
+    };
+  });
+  document.getElementById('gradeDesc').textContent=gradeDescs[state.grading];
   document.getElementById('startBtn').onclick=()=>startQuiz(poolFromFilter());
-  document.getElementById('reviewBtn').onclick=()=>{
-    const ids=new Set(getNotes());
-    startQuiz(ALL.filter(q=>ids.has(q.id)),true);
-  };
-  document.getElementById('clearNoteBtn').onclick=()=>{
-    if(confirm('오답 노트를 모두 비울까요?')){setNotes([]);refreshNote();}
-  };
-  document.getElementById('againBtn').onclick=()=>goHome();
-  document.getElementById('reviewWrongBtn').onclick=()=>{
-    if(session&&session.wrongIds.length) startQuiz(ALL.filter(q=>session.wrongIds.includes(q.id)),true);
-    else goHome();
-  };
-  document.getElementById('quitBtn').onclick=()=>{ if(confirm('현재 풀이를 그만둘까요?')) goHome(); };
 
-  refreshPool();refreshNote();updateMini();
+  refreshPool();
 }
 
+function buildChapterChips(){
+  const chapters=activeCert.chapters;
+  const cb=document.getElementById('chipBox');
+  if(!cb) return;
+  const counts={};
+  poolBeforeChapter().forEach(q=>counts[q.chapter]=(counts[q.chapter]||0)+1);
+  cb.innerHTML='';
+  Object.keys(chapters).forEach(ch=>{
+    const el=document.createElement('button');
+    el.className='chip'+(state.selectedChapters.has(ch)?' on':'');
+    el.dataset.ch=ch;
+    el.innerHTML=`<span class="ck">✓</span><span>${chapters[ch]}</span><span class="cnt">${counts[ch]||0}</span>`;
+    el.onclick=()=>{
+      el.classList.toggle('on');
+      state.selectedChapters.has(ch)?state.selectedChapters.delete(ch):state.selectedChapters.add(ch);
+      refreshPool();
+    };
+    cb.appendChild(el);
+  });
+}
+function refreshChapterCounts(){ if(activeCert.chapters) buildChapterChips(); }
+
+/* ---------- pool computation ---------- */
+function poolBeforeChapter(){
+  if(state.mode==='set'){
+    if(!state.selectedSets.size) return [];
+    return ALL.filter(q=>state.selectedSets.has(q.set));
+  }
+  if(state.mode==='ai') return ALL.filter(q=>q.set==='AI');
+  return ALL.filter(q=>q.set!=='AI'); // mixed
+}
 function poolFromFilter(){
-  let p = state.selectedChapters.size
-    ? ALL.filter(q=>state.selectedChapters.has(q.chapter))
-    : ALL.slice();
+  let p=poolBeforeChapter();
+  if(activeCert.chapters && state.selectedChapters.size){
+    p=p.filter(q=>state.selectedChapters.has(q.chapter));
+  }
   return p;
 }
 function refreshPool(){
   const n=poolFromFilter().length;
   const take=state.count===0?n:Math.min(state.count,n);
-  document.getElementById('poolInfo').innerHTML=
-    `대상 <b>${n}</b>문제 → 이번 풀이 <b>${take}</b>문제`;
-  document.getElementById('startBtn').disabled = n===0;
+  const info=document.getElementById('poolInfo');
+  if(info) info.innerHTML=`대상 <b>${n}</b>문제 → 이번 풀이 <b>${take}</b>문제`;
+  const sb=document.getElementById('startBtn');
+  if(sb){
+    sb.disabled=n===0;
+    sb.textContent=(state.mode==='set'&&!state.selectedSets.size)?'세트를 선택하세요':'풀이 시작 →';
+  }
 }
 function refreshNote(){
   const notes=getNotes();
-  const card=document.getElementById('noteCard');
+  document.getElementById('noteCard').classList.toggle('hidden',notes.length===0);
   document.getElementById('noteCount').textContent=notes.length;
-  card.classList.toggle('hidden',notes.length===0);
+  document.getElementById('reviewBtn').onclick=()=>startQuiz(ALL.filter(q=>new Set(getNotes()).has(q.id)),true);
+  document.getElementById('clearNoteBtn').onclick=()=>{if(confirm('오답 노트를 모두 비울까요?')){setNotes([]);refreshNote();}};
 }
 function updateMini(){
+  const n=ALL.filter(q=>q.set!=='AI').length, ai=ALL.filter(q=>q.set==='AI').length;
   document.getElementById('miniStat').innerHTML=
-    `총 <b>${ALL.length}</b>문제`;
+    `<b>${activeCert.name}</b> · ${n}문제${ai?` (+AI ${ai})`:''}`;
 }
 
 /* ---------- quiz engine ---------- */
 function shuffle(a){a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.random()*(i+1)|0;[a[i],a[j]]=[a[j],a[i]]}return a}
+function numKey(s){const m=(s||'').match(/\d+/);return m?+m[0]:0}
 
 function startQuiz(pool,isReview=false){
   if(!pool.length){alert('풀 문제가 없습니다.');return;}
-  let qs = state.order==='random'||isReview ? shuffle(pool) : pool.slice().sort((a,b)=>a.set.localeCompare(b.set)|| (parseInt(a.num.replace(/\D/g,''))-parseInt(b.num.replace(/\D/g,''))));
+  let qs;
+  if(state.order==='seq' && !isReview){
+    qs=pool.slice().sort((a,b)=>a.set.localeCompare(b.set)||numKey(a.num)-numKey(b.num));
+  }else qs=shuffle(pool);
   if(!isReview && state.count>0) qs=qs.slice(0,state.count);
-  session={list:qs,idx:0,score:0,wrongIds:[],isReview};
+  session={list:qs,idx:0,score:0,wrongIds:[],isReview,grading:state.grading,answers:[]};
   show('quiz');
   document.getElementById('qTotal').textContent=qs.length;
+  document.getElementById('quitBtn').onclick=()=>{if(confirm('현재 풀이를 그만둘까요?'))goHome();};
   renderQ();
+  window.scrollTo({top:0});
 }
 
 function renderQ(){
   const q=session.list[session.idx];
   document.getElementById('qNow').textContent=session.idx+1;
+  const endMode=session.grading==='end';
+  // 모아서 채점이면 진행 중 점수를 숨겨 정답 노출 방지
+  document.getElementById('qScore').parentElement.style.visibility = endMode?'hidden':'visible';
   document.getElementById('qScore').textContent=session.score;
-  const pct=(session.idx)/session.list.length*100;
-  document.getElementById('pFill').style.width=pct+'%';
+  document.getElementById('pFill').style.width=(session.idx/session.list.length*100)+'%';
 
   const isMulti=q.answer.length>1;
   const letters=Object.keys(q.options);
-  const c=document.getElementById('qContainer');
-
-  c.innerHTML=`
+  const srcLabel=q.set==='AI'?'AI':`${q.set}${q.extra?'·추가':''}-${q.num}`;
+  const prev=session.answers[session.idx]; // restore if revisiting
+  document.getElementById('qContainer').innerHTML=`
     <div class="q-card">
       <div class="q-tags">
-        <span class="tag lo">${q.lo}</span>
-        <span class="tag k">${q.klevel}</span>
-        <span class="tag src">${q.set}${q.extra?'·추가':''}-${q.num}</span>
+        ${q.lo?`<span class="tag lo">${q.lo}</span>`:''}
+        ${q.klevel?`<span class="tag k">${q.klevel}</span>`:''}
+        <span class="tag">${srcLabel}</span>
         ${isMulti?`<span class="tag multi">복수 정답 ${q.answer.length}개</span>`:''}
       </div>
       <div class="q-stem">${esc(q.stem)}</div>
       ${isMulti?`<div class="q-multi-hint">정답을 ${q.answer.length}개 선택하세요</div>`:''}
       <div class="opts" id="opts"></div>
       <div class="q-actions" id="qActions">
-        ${isMulti?`<button class="btn btn-primary btn-sm" id="checkBtn" disabled>제출</button>`:''}
+        ${isMulti||endMode?`<button class="btn btn-primary btn-sm" id="checkBtn" disabled>${endMode?(session.idx===session.list.length-1?'제출하고 결과 보기 →':'다음 문제 →'):'제출'}</button>`:''}
         <div class="spacer"></div>
       </div>
       <div id="explSlot"></div>
     </div>`;
 
   const optBox=document.getElementById('opts');
-  const picked=new Set();
+  const picked=new Set(prev||[]);
   letters.forEach(L=>{
     const b=document.createElement('button');
-    b.className='opt';b.dataset.k=L;
+    b.className='opt'+(picked.has(L)?' sel':'');b.dataset.k=L;
     b.innerHTML=`<span class="key">${L}</span><span class="body">${esc(q.options[L])}</span>`;
     b.onclick=()=>{
       if(b.classList.contains('locked'))return;
-      if(isMulti){
+      if(isMulti||endMode){
         b.classList.toggle('sel');
-        if(picked.has(L))picked.delete(L);else picked.add(L);
-        document.getElementById('checkBtn').disabled = picked.size===0;
-      }else{
-        lockAndGrade([L]);
-      }
+        picked.has(L)?picked.delete(L):picked.add(L);
+        if(!isMulti && endMode){
+          // single-answer in end mode: only one selectable
+          if(picked.size>1){picked.clear();picked.add(L);
+            optBox.querySelectorAll('.opt').forEach(o=>o.classList.toggle('sel',o.dataset.k===L));}
+        }
+        document.getElementById('checkBtn').disabled=picked.size===0;
+      }else lockAndGrade([L]);
     };
     optBox.appendChild(b);
   });
-  if(isMulti){
-    document.getElementById('checkBtn').onclick=()=>lockAndGrade([...picked]);
+  const cb=document.getElementById('checkBtn');
+  if(cb){
+    cb.disabled=picked.size===0;
+    if(endMode) cb.onclick=()=>recordAndNext([...picked]);
+    else cb.onclick=()=>lockAndGrade([...picked]); // multi + instant
   }
+}
+
+// 모아서 채점: 답만 기록하고 즉시 다음 (해설 없음)
+function recordAndNext(picked){
+  session.answers[session.idx]=picked;
+  if(session.idx<session.list.length-1){session.idx++;renderQ();window.scrollTo({top:0,behavior:'smooth'});}
+  else finish();
 }
 
 function lockAndGrade(picked){
   const q=session.list[session.idx];
-  const correct=q.answer.slice().sort();
-  const chosen=picked.slice().sort();
-  const isCorrect = correct.length===chosen.length && correct.every((v,i)=>v===chosen[i]);
+  session.answers[session.idx]=picked;
+  const correct=q.answer.slice().sort(), chosen=picked.slice().sort();
+  const ok=correct.length===chosen.length && correct.every((v,i)=>v===chosen[i]);
 
   document.querySelectorAll('.opt').forEach(o=>{
-    o.classList.add('locked');
+    o.classList.add('locked');o.classList.remove('sel');
     const k=o.dataset.k;
     if(q.answer.includes(k)) o.classList.add('correct');
     else if(picked.includes(k)) o.classList.add('wrong');
-    o.classList.remove('sel');
   });
   const cb=document.getElementById('checkBtn'); if(cb) cb.remove();
 
-  if(isCorrect){
-    session.score++;
-    // remove from notes if reviewing / answered right
-    const notes=getNotes().filter(id=>id!==q.id); setNotes(notes);
-  }else{
-    session.wrongIds.push(q.id);
-    const notes=getNotes(); notes.push(q.id); setNotes(notes);
-  }
+  if(ok){ session.score++; setNotes(getNotes().filter(id=>id!==q.id)); }
+  else{ session.wrongIds.push(q.id); const n=getNotes();n.push(q.id);setNotes(n); }
   document.getElementById('qScore').textContent=session.score;
 
-  // explanation
-  const last = session.idx===session.list.length-1;
-  const slot=document.getElementById('explSlot');
-  slot.innerHTML=`
+  const last=session.idx===session.list.length-1;
+  document.getElementById('explSlot').innerHTML=`
     <div class="expl">
-      <div class="verdict ${isCorrect?'ok':'no'}">
-        ${isCorrect?'✓ 정답입니다':'✕ 틀렸습니다'}
+      <div class="verdict ${ok?'ok':'no'}">
+        ${ok?'✓ 정답입니다':'✕ 틀렸습니다'}
         <span class="ans">정답 ${q.answer.join(', ')}</span>
       </div>
       <div class="expl-body">${esc(q.explanation||'해설이 없습니다.')}</div>
     </div>`;
-  const act=document.getElementById('qActions');
-  const nextBtn=document.createElement('button');
-  nextBtn.className='btn btn-primary';
-  nextBtn.textContent = last?'결과 보기 →':'다음 문제 →';
-  nextBtn.onclick=next;
-  act.appendChild(nextBtn);
-  nextBtn.focus();
-  slot.scrollIntoView({behavior:'smooth',block:'nearest'});
+  const next=document.createElement('button');
+  next.className='btn btn-primary';
+  next.textContent=last?'결과 보기 →':'다음 문제 →';
+  next.onclick=goNext;
+  document.getElementById('qActions').appendChild(next);
+  next.focus();
+  document.getElementById('explSlot').scrollIntoView({behavior:'smooth',block:'nearest'});
 }
 
-function next(){
+function goNext(){
   if(session.idx<session.list.length-1){session.idx++;renderQ();window.scrollTo({top:0,behavior:'smooth'});}
   else finish();
 }
 
 function finish(){
+  // 모아서 채점이면 여기서 일괄 채점
+  if(session.grading==='end'){
+    session.score=0; session.wrongIds=[];
+    session.list.forEach((q,i)=>{
+      const picked=(session.answers[i]||[]).slice().sort();
+      const correct=q.answer.slice().sort();
+      const ok=correct.length===picked.length && correct.every((v,j)=>v===picked[j]);
+      if(ok){ session.score++; setNotes(getNotes().filter(id=>id!==q.id)); }
+      else{ session.wrongIds.push(q.id); const n=getNotes();n.push(q.id);setNotes(n); }
+    });
+  }
+  document.getElementById('qScore').parentElement.style.visibility='visible';
+
   show('result');
-  const total=session.list.length, correct=session.score, wrong=total-correct;
+  const total=session.list.length,correct=session.score,wrong=total-correct;
   const pct=Math.round(correct/total*100);
   document.getElementById('rPct').textContent=pct;
   document.getElementById('rCorrect').textContent=correct;
@@ -597,7 +860,6 @@ function finish(){
   document.getElementById('sWrong').textContent=wrong;
   document.getElementById('sNote').textContent=getNotes().length;
 
-  // ISTQB pass mark is 65%
   let grade,title,color;
   if(pct>=65){grade='합격선';title='훌륭해요! 합격선을 넘었습니다';color='var(--green)';}
   else if(pct>=50){grade='조금 더';title='거의 다 왔어요';color='var(--amber)';}
@@ -608,22 +870,80 @@ function finish(){
   const ring=document.getElementById('ringFill');
   ring.style.stroke=color;
   document.querySelector('.result .pct').style.color=color;
-  const circ=465, off=circ-(circ*pct/100);
+  const off=465-(465*pct/100);
   setTimeout(()=>{ring.style.transition='stroke-dashoffset 1s cubic-bezier(.4,0,.2,1)';ring.style.strokeDashoffset=off;},80);
 
-  document.getElementById('reviewWrongBtn').style.display = wrong>0?'inline-flex':'none';
+  document.getElementById('reviewWrongBtn').style.display=wrong>0?'inline-flex':'none';
+  document.getElementById('reviewWrongBtn').onclick=()=>{
+    if(session&&session.wrongIds.length) startQuiz(ALL.filter(q=>session.wrongIds.includes(q.id)),true);
+    else goHome();
+  };
+  document.getElementById('againBtn').onclick=goHome;
+
+  renderReview();
   refreshNote();
 }
 
-/* ---------- nav ---------- */
-function goHome(){show('home');refreshPool();refreshNote();window.scrollTo({top:0});}
-function show(id){
-  ['home','quiz','result'].forEach(s=>document.getElementById(s).classList.add('hidden'));
-  document.getElementById(id).classList.remove('hidden');
+// 결과 화면 하단의 전체 해설 리스트 (모든 모드에서 제공, 모아서 채점일 땐 특히 유용)
+function renderReview(){
+  const slot=document.getElementById('reviewList');
+  slot.innerHTML=`
+    <div class="rev-head">
+      <h3>전체 해설</h3>
+      <button class="btn btn-ghost btn-sm" id="revToggle">접기</button>
+    </div>
+    <div id="revBody"></div>`;
+  const body=document.getElementById('revBody');
+  session.list.forEach((q,i)=>{
+    const picked=(session.answers[i]||[]).slice().sort();
+    const correct=q.answer.slice().sort();
+    const ok=correct.length===picked.length && correct.every((v,j)=>v===picked[j]);
+    const srcLabel=q.set==='AI'?'AI':`${q.set}${q.extra?'·추가':''}-${q.num}`;
+    const item=document.createElement('div');
+    item.className='rev-item '+(ok?'ok':'no');
+    const optsHtml=Object.keys(q.options).map(L=>{
+      const isAns=q.answer.includes(L), isPick=picked.includes(L);
+      let cls='rev-opt';
+      if(isAns) cls+=' correct';
+      else if(isPick) cls+=' wrong';
+      const mark=isAns?'✓':(isPick?'✕':'');
+      return `<div class="${cls}"><span class="rk">${L}</span><span>${esc(q.options[L])}</span><span class="rm">${mark}</span></div>`;
+    }).join('');
+    item.innerHTML=`
+      <div class="rev-q" data-i="${i}">
+        <span class="rev-no">${i+1}</span>
+        <span class="rev-badge ${ok?'g':'r'}">${ok?'정답':'오답'}</span>
+        <span class="rev-stem">${esc(q.stem)}</span>
+        <span class="rev-chev">▾</span>
+      </div>
+      <div class="rev-detail">
+        <div class="rev-opts">${optsHtml}</div>
+        <div class="rev-meta mono">${q.lo?q.lo+' · ':''}${q.klevel||''} · ${srcLabel}
+          · 내 답 ${picked.length?picked.join(', '):'미응답'} · 정답 ${correct.join(', ')}</div>
+        <div class="rev-expl">${esc(q.explanation||'해설이 없습니다.')}</div>
+      </div>`;
+    body.appendChild(item);
+  });
+  // accordion
+  body.querySelectorAll('.rev-q').forEach(h=>h.onclick=()=>h.parentElement.classList.toggle('open'));
+  // 오답은 기본 펼침
+  body.querySelectorAll('.rev-item.no').forEach(it=>it.classList.add('open'));
+  let folded=false;
+  document.getElementById('revToggle').onclick=()=>{
+    folded=!folded;
+    body.querySelectorAll('.rev-item').forEach(it=>it.classList.toggle('open',!folded));
+    document.getElementById('revToggle').textContent=folded?'모두 펼치기':'접기';
+  };
 }
+
+/* ---------- nav ---------- */
+function goHome(){if(!activeCert)return;show('home');renderConfig();refreshNote();window.scrollTo({top:0});}
+function show(id){['home','quiz','result'].forEach(s=>document.getElementById(s).classList.add('hidden'));document.getElementById(id).classList.remove('hidden');}
 function esc(s){return (s||'').replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));}
 
-load();
+/* ---------- start ---------- */
+buildTabs();
+selectCert(CERTS.find(c=>c.ready).id);
 </script>
 </body>
 </html>
