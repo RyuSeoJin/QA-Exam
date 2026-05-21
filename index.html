@@ -423,6 +423,7 @@ const CERTS = [
     name:'ISTQB CTFL',
     sub:'Foundation Level v4.0',
     file:'istqb-ctfl-kor-question.json',
+    aiFile:'istqb-ctfl-kor-ai-question.json',
     ready:true,
     chapters:{
       '1':'1. 테스팅의 기초','2':'2. SDLC 전반의 테스팅','3':'3. 정적 테스팅',
@@ -481,7 +482,18 @@ async function selectCert(id){
     if(!cache[id]){
       const res=await fetch(cert.file,{cache:'no-store'});
       if(!res.ok) throw new Error('HTTP '+res.status);
-      cache[id]=await res.json();
+      let data=await res.json();
+      // AI 문제 파일이 있으면 함께 불러와 합친다 (없거나 실패해도 메인은 동작)
+      if(cert.aiFile){
+        try{
+          const aiRes=await fetch(cert.aiFile,{cache:'no-store'});
+          if(aiRes.ok){
+            const aiData=await aiRes.json();
+            if(Array.isArray(aiData)) data=data.concat(aiData);
+          }
+        }catch(_){ /* AI 파일 없음: 무시 */ }
+      }
+      cache[id]=data;
     }
     ALL=cache[id];
     if(!Array.isArray(ALL)||!ALL.length) throw new Error('빈 데이터');

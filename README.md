@@ -7,10 +7,13 @@
 
 ```
 index.html       사이트 전체 (UI / 로직 / 자격증·모드 설정)
-istqb-ctfl-kor-question.json   ISTQB CTFL 문제 데이터 (186문제)
+istqb-ctfl-kor-question.json      ISTQB CTFL 공개 샘플 문제 (186문제: A 66 + B·C·D 각 40)
+istqb-ctfl-kor-ai-question.json   ISTQB CTFL AI 생성 문제 (172문제, 챕터별 / 실러버스 v4.0.1 기반)
 ```
 
-`index.html`이 같은 폴더의 `istqb-ctfl-kor-question.json`을 `fetch`로 읽어옵니다.
+`index.html`이 같은 폴더의 `istqb-ctfl-kor-question.json`(샘플 문제)과
+`istqb-ctfl-kor-ai-question.json`(AI 문제)을 `fetch`로 함께 읽어옵니다.
+AI 문제 파일이 있으면 "AI 문제 풀기" 모드가 자동으로 활성화됩니다.
 
 ## 띄우는 방법
 
